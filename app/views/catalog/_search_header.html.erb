@@ -1,7 +1,8 @@
 <% unless ['authors','periods'].include? controller.action_name %>
 <div class="documents">
-   <%= render 'sort_and_per_page' %>
-   <%= render 'did_you_mean' %>
-   <%= render 'constraints' %>
+  <%= render 'sort_widget' %>
+  <%= render 'sort_and_per_page' %>
+  <%= render 'did_you_mean' %>
+  <%= render 'constraints' %>
 </div>
 <% end %>

@@ -21,8 +21,25 @@
                 <%= render :partial => 'shared/components/organisms/content-spot/index', locals: {header: t("view-specific.home.boxes.#{subject}.title"), description: t("view-specific.home.boxes.#{subject}.description"), image:"#{subject}.jpg", classes:'', url:urls[index]} %>
                 <% end %>
             <% elsif collection == 'tfs' %>
-              <aside style="text-align:right"><a href='/pages/tfs-bibliografi'>Læs detaljeret bibliografi</a></aside>
-            <% end %>
+            <aside style="text-align:right"><a href='/pages/tfs-bibliografi'>Læs detaljeret bibliografi</a></aside>
+	    <% elsif collection == 'gv' %>
+
+	    <!-- &facet.sort=index -->
+	    
+	    <aside style="text-align:right"><a href='/text?editorial=no&f[author_name_ssim][]=Grundtvig%2C+N.+F.+S.&f[subcollection_ssi][]=gv&match=one&q=&search_field=Alt'>Liste over værker</a></aside>
+
+	    <aside  style="text-align:right"><a data-blacklight-modal="trigger" href="/text/facet/person_name_ssim?editorial=no&amp;f%5Bsubcollection_ssi%5D%5B%5D=gv&amp;match=one&amp;q=&amp;search_field=Alt">Personer</a></aside>
+
+	    <aside  style="text-align:right"><a data-blacklight-modal="trigger" href="/text/facet/other_location_ssim?editorial=no&amp;f%5Bsubcollection_ssi%5D%5B%5D=gv&amp;match=one&amp;q=&amp;search_field=Alt">Steder</a></aside>
+
+	    <aside  style="text-align:right">   <a data-blacklight-modal="trigger" href="/text/facet/textclass_genre_ssim?editorial=no&amp;f%5Bsubcollection_ssi%5D%5B%5D=gv&amp;match=one&amp;q=&amp;search_field=Alt">Tekstklassifikation</a></aside>
+	    
+	    <aside  style="text-align:right"><a data-blacklight-modal="trigger" href="/text/facet/textclass_keywords_ssim?editorial=no&amp;f%5Bsubcollection_ssi%5D%5B%5D=gv&amp;match=one&amp;q=&amp;search_field=Alt">Emneord</a></aside>
+
+	    <aside  style="text-align:right"><a data-blacklight-modal="trigger" href="/text/facet/bible_ref_ssim?editorial=no&amp;f%5Bsubcollection_ssi%5D%5B%5D=gv&amp;match=one&amp;q=&amp;search_field=Alt">Bibelsted</a></aside>
+
+
+	    <% end %>
           </div>
         </div>
       </div>

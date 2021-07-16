@@ -2,7 +2,7 @@
   <div class="inner-content grid-container">
     <div class="grid-x grid-padding-x grid-padding-y">
       <div class="small-6 medium-3 cell">
-        <%= render :partial =>'shared/components/molecules/link-list/index', locals: {title: '', list: [[t('view-specific.footer.about'), page_path('about-text-portal'), '_self'],['Cookie- og Privatlivspolitik','http://www.kb.dk/da/kb/webstedet/cookiepolitik.html','_blank'],[t('view-specific.footer.contact-us-label'),t('view-specific.footer.contact-us-link'), '_self']]} %>
+        <%= render :partial =>'shared/components/molecules/link-list/index', locals: {title: '', list: [[t('view-specific.footer.about'), page_path('about-text-portal'), '_self'],['Cookie- og Privatlivspolitik','http://www.kb.dk/da/kb/webstedet/cookiepolitik.html','_blank'],[t('view-specific.footer.accessibility-law-label'),t('view-specific.footer.accessibility-law-link'), '_blank'], [t('view-specific.footer.contact-us-label'),t('view-specific.footer.contact-us-link'), '_self']]} %>
       </div>
       <div class="small-6 medium-3 cell">
         <%= render :partial =>'shared/components/molecules/link-list/index', locals: {title: '', list: []} %>

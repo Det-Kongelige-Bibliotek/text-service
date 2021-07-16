@@ -5,8 +5,9 @@ require 'oai_provider'
 class CatalogController < ApplicationController
 
   include Blacklight::Catalog
-#  include ApplicationHelper
+  include BlacklightRangeLimit::ControllerOverride
 
+  
   #get the list of all authors in a period when we are showing af period
   before_action :get_authors_in_period, only: [:show], if: :showing_period?
 
@@ -24,7 +25,6 @@ class CatalogController < ApplicationController
     config.default_solr_params = {
         :qt => 'search',
         :rows => 10,
-        #:fq => ['application_ssim:ADL'],
         :hl => 'true',
         :'hl.snippets' => '3',
         :'hl.simple.pre' => '<em class="highlight" >',
@@ -67,12 +67,32 @@ class CatalogController < ApplicationController
     # facet bar
 
     config.add_facet_field 'author_name_ssim', :label => 'Forfatter', :single => true, :limit => 10, :collapse => false
+    config.add_facet_field 'person_name_ssim', :label => 'Anden person', :single => true, :limit => 10, :collapse => true
+    config.add_facet_field 'other_location_ssim', :label => 'Sted', :single => true, :limit => 10, :collapse => true
     config.add_facet_field 'contains_ssi', :label => 'Indeholder mest', :single => true, :limit => 10, :collapse => false, helper_method: :get_genre_name
-    config.add_facet_field 'perioid_ssi', :label => 'Periode', :single => true, :limit => 10, :collapse => false, helper_method: :get_period_name
+#    config.add_facet_field 'perioid_ssi', :label => 'Periode', :single => true, :limit => 10, :collapse => true, helper_method: :get_period_name
     config.add_facet_field 'subcollection_ssi', :label => 'Samling', :single => true, :limit => 10, :collapse => false, helper_method: :get_collection_name
     config.add_facet_field 'text_type_ssi', :label => 'Tekstkategori', :single => true, :limit => 10, :collapse => false
-    config.add_facet_field 'textclass_genre_ssim', :label => 'Tekstklassifikation', :single => true, :limit => 10, :collapse => false
-    config.add_facet_field 'textclass_keywords_ssim', :label => 'Emneord', :single => true, :limit => 10, :collapse => false
+    config.add_facet_field 'textclass_genre_ssim', :label => 'Tekstklassifikation', :single => true, :limit => 10, :collapse => true
+    config.add_facet_field 'textclass_keywords_ssim', :label => 'Emneord', :single => true, :limit => 10, :collapse => true
+    config.add_facet_field 'bible_ref_ssim', :label => 'Bibelsted', :single => true, :limit => 10, :collapse => true
+    config.add_facet_field 'year_itsi', label: 'Årstal', range: {
+                         num_segments: 10,
+                         assumed_boundaries: [1500, Time.now.year + 2],
+                         segments: true,
+                         maxlength: 4
+                       }
+
+#    config.add_facet_field 'pub_date', label: 'Publication Year',
+#                           range: {
+#                             num_segments: 10,
+#                             assumed_boundaries: [1900, Time.now.year + 2],
+#                             segments: true,
+#                             maxlength: 4
+#                           }
+
+    
+    
     #
     # set :index_range to true if you want the facet pagination view to have facet prefix-based navigation
     #  (useful when user clicks "more" on a large facet and wants to navigate alphabetically across a large set of results)
@@ -86,9 +106,21 @@ class CatalogController < ApplicationController
     # solr fields to be displayed in the index (search results) view
     #   The ordering of the field names is the order of the display
     config.add_index_field 'author_id_ssi', :label => 'Forfatter', helper_method: :author_link, short_form: true, itemprop: :author
+
+    config.add_index_field 'subcollection_ssi', :label => 'Samling', :single => true,  short_form: true, helper_method: :get_collection
+
+    #config.add_index_field 'person_id_ssi', :label => 'Person', helper_method: :person_link, short_form: true, itemprop: :person
+
+    
     ## if we have no author_id_ssi (link to author portrait, just show the author name)
     config.add_index_field 'author_name_tesim', :label => 'Forfatter',  short_form: true, itemprop: :author, unless: proc {|_context, _field_config, doc| doc['author_id_ssi'].present?}
+    
+    #    config.add_index_field 'person_name_tesim', :label => 'Person',  short_form: true, itemprop: :person, unless: proc {|_context, _field_config, doc| doc['person_id_ssi'].present?}
+    
+    config.add_index_field 'year_itsi', :label => 'Udgivelsesdato'
+
     config.add_index_field 'volume_title_tesim', :label => 'Anvendt udgave', helper_method: :show_volume, short_form: true, itemprop: :isPartOf, unless: proc { |_context, _field_config, doc | doc.id == doc['volume_id_ssi'] }
+    
     #config.add_index_field 'editor_ssi', :label => 'Redaktør', itemprop: :editor
 
 
@@ -98,6 +130,7 @@ class CatalogController < ApplicationController
 
     # Work show fields
     config.add_show_field 'author_id_ssi', :label => 'Forfatter', helper_method: :author_link, itemprop: :author
+    config.add_show_field 'person_id_ssi', :label => 'Person', helper_method: :person_link, itemprop: :person
     config.add_show_field 'volume_title_tesim', :label => 'Anvendt udgave', helper_method: :show_volume, itemprop: :isPartOf
     #
     # , unless: proc { |_context, _field_config, doc | doc.id == doc['volume_id_ssi'] }
@@ -136,7 +169,7 @@ class CatalogController < ApplicationController
     # since we aren't specifying it otherwise.
     config.add_search_field('Alt',label: I18n.t('general.config.search.all_filters')) do |field|
       field.solr_parameters = {
-          :fq => ['cat_ssi:work'],
+          :fq => ['type_ssi:work'],
           :qf => 'author_name_tesim^5 work_title_tesim^5 text_tsim',
           :pf => 'text_tsim'
       }
@@ -147,7 +180,7 @@ class CatalogController < ApplicationController
 
     config.add_search_field('author_title',label: I18n.t('general.config.search.author_title')) do |field|
       field.solr_parameters = {
-        :fq => ['cat_ssi:work'],
+        :fq => ['type_ssi:work'],
         :qf => 'author_name_tesim work_title_tesim',
         :pf => 'work_title_tesim'
       }
@@ -181,10 +214,20 @@ class CatalogController < ApplicationController
 #      }
 #    end
 
+
+    config.add_search_field('person', label: I18n.t('general.config.search.person')) do |field|
+      field.solr_parameters = {
+        :fq => ['type_ssi:work'],
+        :qf => 'person_name_tesim',
+        :pf => 'person_name_tesim'
+      }
+      field.solr_local_parameters = {
+      }
+    end
   
     config.add_search_field('prose', label: I18n.t('general.config.search.prose')) do |field|
       field.solr_parameters = {
-        :fq => ['cat_ssi:work'],
+        :fq => ['type_ssi:work'],
         :qf => 'prose_extract_tesim',
         :pf => 'prose_extract_tesim'
       }
@@ -194,7 +237,7 @@ class CatalogController < ApplicationController
 
     config.add_search_field('verse', label: I18n.t('general.config.search.verse')) do |field|
       field.solr_parameters = {
-        :fq => ['cat_ssi:work'],
+        :fq => ['type_ssi:work'],        
         :qf => 'verse_extract_tesim',
         :pf => 'verse_extract_tesim'
       }
@@ -204,7 +247,7 @@ class CatalogController < ApplicationController
 
     config.add_search_field('play', label: I18n.t('general.config.search.play')) do |field|
       field.solr_parameters = {
-        :fq => ['cat_ssi:work'],
+        :fq => ['type_ssi:work'],                
         :qf => 'performance_extract_tesim',
         :pf => 'performance_extract_tesim'
       }
@@ -248,8 +291,10 @@ class CatalogController < ApplicationController
     # except in the relevancy case).
     config.add_sort_field 'score desc', :label => (I18n.t'general.config.sort.relevance')
     config.add_sort_field 'author_name_ssi asc', :label => (I18n.t'general.config.sort.author')
-    config.add_sort_field 'work_title_ssi asc', :label => 'Titel'
-
+    config.add_sort_field 'sort_title_ssi asc', :label => (I18n.t'general.config.sort.title_asc')
+    config.add_sort_field 'sort_title_ssi desc', :label => (I18n.t'general.config.sort.title_desc')
+    config.add_sort_field 'year_itsi asc', :label => (I18n.t'general.config.sort.year_asc')
+    config.add_sort_field 'year_itsi desc', :label => (I18n.t'general.config.sort.year_desc')
     config.spell_max = 5
 
 
@@ -257,19 +302,6 @@ class CatalogController < ApplicationController
     # Now we see how to over-ride Solr request handler defaults, in this
     # case for a BL "search field", which is really a dismax aggregate
     # of Solr search fields.
-
-
-
-
-
-    # Specifying a :qt only to show it's possible, and so our internal automated
-    # tests can test it. In this case it's the same as
-    # config[:default_solr_parameters][:qt], so isn't actually neccesary.
-
-    # "sort results by" select (pulldown)
-    # label in pulldown is followed by the name of the SOLR field to sort by and
-    # whether the sort is ascending or descending (it must be asc or desc
-    # except in the relevancy case).
 
 
     # If there are more than this many search results, no spelling ("did you
@@ -280,21 +312,34 @@ class CatalogController < ApplicationController
     config.autocomplete_enabled = true
     config.autocomplete_path = 'suggest'
 
+   
+    oai_solr = []
     config.oai_config = {
         :default_solr_params => {
-            :fq => "cat_ssi:work"
+            :fq => "type_ssi:work"
         },
         :timestamp_field => 'timestamp',
         :limit => 20,
-        :sets => [{
-            :name => 'Test set',
-            :desc => 'A set for testing',
-            :spec => 'kb.test',
-            :solr_params => {},},
-        {:name => 'Another test set',
-                  :desc => 'More testing',
-                  :spec => 'kb.test2',
-                  :solr_params => {}}]
+        :sets => [
+          {
+            :name => 'ADL',
+            :desc => 'Archive for Danish Literature',
+            :spec => 'kb.adl',
+            :solr_params => {
+              :fq => "subcollection_ssi:adl"
+            }
+#            :solr_params => {},
+          },
+          {
+            :name => 'TFS',
+            :desc => 'Trykkefrihedens Skrifter',
+            :spec => 'kb.tfs',
+            :solr_params => {
+              :fq => "subcollection_ssi:tfs"
+            }
+#            :solr_params => {}
+          }
+        ]
     }
  end
 
@@ -397,6 +442,10 @@ class CatalogController < ApplicationController
       '<dd>Materialet er fri af ophavsret. Du kan kopiere, ændre, distribuere eller fremføre værket,
       også til kommercielle formål, uden at bede om tilladelse.</dd>' +
       '<dd><a rel="license" href="https://creativecommons.org/publicdomain/mark/1.0/deed.da">Læs Public Domain-erklæringen</a>.</dd>'
+    else
+      pd = '<dt>Ophavsret</dt>' +
+      '<dd>Materialet er dedikeret til public domain. Du kan kopiere, ændre, distribuere og fremføre 	værket, også til kommercielle formål, uden at bede om tilladelse. Husk dog altid at kreditere ophavsmanden.</dd>' +
+      '<dd><a rel="license" href="https://creativecommons.org/publicdomain/zero/1.0/deed.da">Læs CC0-erklæringen</a>.</dd>'
     end
     
     render pdf: name,
@@ -447,7 +496,7 @@ class CatalogController < ApplicationController
     when "lhv"
       id = "lhv"
     end
-    redirect_to  action: 'index', f: {subcollection_ssi: ["#{id}"]}, match: 'one', search_field: 'Alt'
+    redirect_to  action: 'index', f: {subcollection_ssi: ["#{id}"]}, editorial: 'no',  match: 'one', search_field: 'Alt'
   end
 
   def oai

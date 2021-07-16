@@ -27,6 +27,25 @@
   &.crown {
     background-image: url(asset-path('icons/icon-crown.svg'));
   }
+  &.letter {
+    position: relative;
+    bottom: 0.25rem;
+    &:before {
+      font-family: 'Roboto', sans-serif;
+      font-weight: bold;
+      font-size: 1.4rem;
+    }
+    &.B {
+      &:before {
+        content: 'B';
+      }
+    }
+    &.M {
+      &:before {
+        content: 'M';
+      }
+    }
+  }
   
   &.icon-xsmall {
     width: .75rem;

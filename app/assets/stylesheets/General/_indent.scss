@@ -1,0 +1,40 @@
+.noIndent {
+  text-indent: 0em;
+}
+.firstIndent {
+  text-indent: 2em;
+}
+.secondIndent {
+  text-indent: 4em;
+}
+.thirdIndent {
+  text-indent: 6em;
+}
+.center {
+  text-align: center;
+}
+.right {
+  text-align: right;
+}
+.firstIndentRight {
+  margin-right: 2em;
+  text-align: right;
+}
+.secondIndentRight {
+  margin-right: 4em;
+  text-align: right;
+}
+.thirdIndentRight {
+  margin-right: 6em;
+  text-align: right;
+}
+.hangingIndent {
+  text-indent: -1em;
+  padding-left: 1em;
+}
+.hangingIndentPro {
+  line-height: 200%;
+  text-align: justify;
+  text-indent: -1em;
+  padding-left: 2em;
+}

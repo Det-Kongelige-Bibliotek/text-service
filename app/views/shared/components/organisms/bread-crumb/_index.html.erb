@@ -7,8 +7,12 @@
           <a href="http://www.kb.dk"><%= t('view-specific.breadcrumb.home')%></a>
 <!--         / <a href="http://digitalesamlinger.kb.dk"><%#= t('view-specific.breadcrumb.digital_collections')%></a>-->
           <% items.each_with_index do | item, index |%>
-              / <% if (index == items.size - 1) | (item[1] == '') %>
+          / <% if (index == items.size - 1) | (item[1] == '') %>
+	          <% if (item[0].downcase == 'letters') %>
+	          BREVE
+                  <% else %>
                   <%= item[0]%>
+                <% end %>		  
                 <% else %>
                   <a href="<%= item[1] %>"><%= item[0]%></a>
                 <% end %>

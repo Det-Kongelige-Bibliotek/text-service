@@ -5,9 +5,11 @@
       <%= render :partial =>'shared/components/atoms/input/index', locals: {name: 'q', value: params[:q] , id: 'q', type: 'text', placeholder: input_placeholder, autofocus: 'autofocus'} %>
       <%= render :partial =>'shared/components/molecules/drop-down-input/index', locals: {name: 'match', id: 'match', type: 'text', placeholder: dropdown1_placeholder,value:'one', text: t('general.search.form.match.one'), datalist: [[t('general.search.form.match.one'),'one'],[t('general.search.form.match.all'),'all'],[t('general.search.form.match.phrase'),'phrase']]}%>
       <%= render :partial =>'shared/components/molecules/drop-down-input/index', locals: {name: :search_field, id: :search_field, type: 'text', placeholder: dropdown1_placeholder,value:options[0][1], text: options[0][0], datalist: options}%>
+      <%= render :partial =>'shared/components/molecules/drop-down-input/index', locals: {name: 'editorial',   id: 'editorial',   type: 'text', placeholder: dropdown1_placeholder, value: 'no', text: t('general.search.form.editorial.nope'), datalist: [[t('general.search.form.editorial.nope'), 'no' ],[t('general.search.form.editorial.yep'),'yes']]}%>
       <button type="submit" alt="search">
         <%= render :partial =>'shared/components/atoms/icon/index', locals: {icon_type: 'search', icon_size: 'icon-medium'}%>
       </button>
     </form>
   <a href="#" data-toggle="modal" data-target="#searchTips">Søgetips</a>
 </div>
+

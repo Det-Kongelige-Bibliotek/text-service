@@ -5,13 +5,13 @@ function toggle_infos() {
     if (this.classList.contains('active')) {
         for (i = 0; i < text_infos.length; i++) {
             text_infos[i].style.display = 'none';
-            text_infos[i].parentElement.style.display = 'none';
+            text_infos[i].parentElement.classList.remove ('show_icons');
         }
     } else {
         for (i = 0; i < text_infos.length; i++) {
             text_infos[i].style.display = 'inline';
             text_infos[i].classList.add('icon', 'info');
-            text_infos[i].parentElement.style.display = 'inline';
+            text_infos[i].parentElement.classList.add ('show_icons');
         }
     }
     this.classList.toggle('active');

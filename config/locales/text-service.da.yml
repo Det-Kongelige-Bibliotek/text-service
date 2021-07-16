@@ -30,6 +30,8 @@ da:
           title: 'Ludvig Holbergs Værker'
         tfs:
           title: 'Trykkefrihedens Skrifter'
+        letters:
+          title: 'Danmarks Breve'
       bluebar:
         title: 'Tekst portal'
         welcome: 'Tekstportal'
@@ -39,13 +41,15 @@ da:
         link-label: 'Det Kgl. Bibliotek'
         link: 'http://www.kb.dk'
     footer:
-       first-link-label: 'Det Danske Sprog- og Litteraturselskab'
-       first-link: 'http://www.dsl.dk'
-       second-link-label: 'Det Kgl. Bibliotek'
-       second-link: 'http://www.kb.dk'
-       contact-us-label: 'Spørg biblioteket'
-       contact-us-link: 'https://www.kb.dk/spoerg-biblioteket'
-       about: 'Om tekstportalen'
+      first-link-label: 'Det Danske Sprog- og Litteraturselskab'
+      first-link: 'http://www.dsl.dk'
+      second-link-label: 'Det Kgl. Bibliotek'
+      second-link: 'http://www.kb.dk'
+      accessibility-law-label: 'Tilgængelighedserklæring'
+      accessibility-law-link: 'https://www.was.digst.dk/tekster-kb-dk'
+      contact-us-label: 'Spørg biblioteket'
+      contact-us-link: 'https://www.kb.dk/spoerg-biblioteket'
+      about: 'Om tekstportalen'
     breadcrumb:
        text_service: 'Tekster'
        home: 'Forside'
@@ -70,6 +74,9 @@ da:
         tfs:
           title: 'Om Trykkefrihedens Skrifter'
           summary: 'Ca. 1000 piecer og pamfletter indsamlet efter Christian 7. og Struensee erklærede trykkefrihed d. 14. september 1770.'
+        letters:	  
+          title: 'Om Danmarks Breve'
+          summary: 'Danmarks breve er en søgebase, hvor du finder digitaliseringer af trykte brevudgivelser fra Det Kgl. Bibliotek.'
         all:
           title: 'Alle værker'
           summary: 'Søgning i alle værker på tværs af alle tekstsamlinger.'

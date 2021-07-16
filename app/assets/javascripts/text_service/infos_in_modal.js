@@ -7,10 +7,10 @@ for (var i = 0; i < infos.length; i++) {
     info.dataset.target = "#info_modal";
 
     info.addEventListener("click", function (event) {
-        event.preventDefault()
+        event.preventDefault();
         let modal = document.getElementById('info_modal');
         let modal_body = modal.getElementsByClassName('modal-body')[0];
-        let text_critic = this.parentElement.nextElementSibling;
+	    let text_critic = event.target.parentElement.parentElement.getElementsByClassName('apparatus-criticus')[0];
         modal_body.innerHTML = text_critic.innerHTML;
         text_critic.setAttribute("style", "display: none !important");
         let witnesses = text_critic.querySelectorAll('.witness[title]');

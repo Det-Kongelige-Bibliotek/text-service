@@ -44,6 +44,9 @@ da:
           one: 'Mindst et ord'
           all: 'Alle ord'
           phrase: 'Som ordene står'
+        editorial:
+          nope: 'Samlingstekst'
+          yep: 'Redaktionelt'
       list:
         format: 'Formater:'
         text: 'Tekst'
@@ -55,14 +58,19 @@ da:
         all_filters: 'Al tekst'
         title: 'Titel'
         author: 'Forfatter'
+        person: 'Anden person'
         verse: 'Vers & strofer'
         prose: 'Prosa'
         play: 'Dialog (drama)'
         author_title: 'Titel & forfatter'
         phrase: 'Sætning'
       sort:
-        relevance: 'Standard'
+        relevance: 'Bedste match'
         author: 'Forfatter'
+        title_asc: 'Titel A to Å'
+        title_desc: 'Titel Å to A'
+        year_asc: 'Kronologisk'	
+        year_desc: 'Omvendt kronologisk'
       email:
         text:
           from: 'Fra: %{value}'

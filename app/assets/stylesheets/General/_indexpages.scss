@@ -18,6 +18,10 @@ a {
   @extend .so-small;
 }
 
+a.pagination {
+  text-decoration: none;
+}
+
 .pagination ul li{
   list-style: none;
   color:$color-dark-blue-100;

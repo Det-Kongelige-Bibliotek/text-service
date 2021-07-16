@@ -268,7 +268,7 @@ article.ocr {
   margin-top: 0;
 
   .kbOSDToolbar {
-    background-color: white;
+    background-color: transparent;
     padding-top: 10px;
     height: 46px;
     position: sticky !important;
@@ -313,7 +313,7 @@ p.init, p.paragraph {
 p.paragraph {
   .pageBreak {
     &:after {
-      content: "\007C\007C";
+      content: "";
       color: $secondary;
       font-size: large;
     }
@@ -324,6 +324,7 @@ p.paragraph {
   visibility: visible;
   position: absolute;
   left: 5px;
+  text-indent: 0em;
 }
 
 a[name] {

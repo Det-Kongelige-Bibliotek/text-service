@@ -70,11 +70,13 @@ module ApplicationHelper
     name = args
     case name
       when "poetry"
-      name = "Poesi"
+        name = "Vers & strofer"
       when "prose"
-      name = "Prosa"
+        name = "Prosa"
       when "play"
-      name = "Skuespil"
+        name = "Dialog (drama)"
+      when "letter"
+        name = "Breve"
     end
   end
 
@@ -90,7 +92,7 @@ module ApplicationHelper
     collection = args
     case collection
     when "all"
-      url = '/text?match=one&q=&match=one&search_field=Alt'
+      url = '/text?match=one&q=&editorial=no&search_field=Alt'
     when "sks"
       url = '/sks'
     when "lhv"
@@ -103,12 +105,19 @@ module ApplicationHelper
       url = '/gv'
     when "tfs"
       url = '/tfs'
+    when "letters"
+      url = '/letters'
     else
       url = "#"
     end
     url
   end
 
+  def get_collection args
+    name = args[:document]['subcollection_ssi']
+    get_collection_name(name)
+  end    
+  
   def get_collection_name args
      name = args
      case name
@@ -124,6 +133,8 @@ module ApplicationHelper
          name = "Grundtvigs Værker"
        when "tfs"
          name = "Trykkefrihedens Skrifter"
+       when "letters"
+         name = "Danmarks Breve"
      end
      name
   end
@@ -186,11 +197,12 @@ module ApplicationHelper
     is_monograph = args[:document]['is_monograph_ssi']=='yes'
     args[:omit_author] = args[:document]['num_authors_isi'].present? ? args[:document]['num_authors_isi'] > 1 : false
 
-    if args[:document]['cat_ssi'] == 'volume'
-      tit = args[:document]['volume_title_tesim'].first.strip
-    else
-      tit = args[:document]['work_title_ssi'].present? ? args[:document]['work_title_ssi'].strip :  args[:document]['volume_title_tesim'].first.strip
-    end
+    # I don't think cat_ssi can have the value volume. This is obsolete!
+#    if args[:document]['cat_ssi'] == 'volume'
+#      tit = args[:document]['volume_title_tesim'].first.strip
+#    else
+      tit = args[:document]['work_title_tesim'].present? ? args[:document]['work_title_tesim'].first.strip :  args[:document]['volume_title_tesim'].first.strip
+#    end
 
     #
     # In retrospect one could easily say that there are far too many title fields in the text service
@@ -242,6 +254,29 @@ module ApplicationHelper
     result
   end
 
+  def person_link args
+    ids = args[:value]
+    logger.debug "Creating person_link #{args[:document]['person_name_tesim'].to_s}"
+    if (ids.is_a? Array) && (ids.size > 1) # we have more than one person
+      repository = blacklight_config.repository_class.new(blacklight_config)
+      ids.map!{|id| link_to get_person_name(repository,id), solr_document_path(id)}
+      result=ids.to_sentence(:last_word_connector => ' og ')
+    else
+      if ids.is_a? Array
+        person_id = ids.first
+      else
+        person_id = ids
+      end
+      person_name = args[:document]['person_name_tesim'].first if args[:document]['person_name_tesim'].present?
+      person_name ||= "Intet Navn"
+      result = link_to author_name, solr_document_path(person_id)
+    end
+    logger.debug "result is #{result}"
+    result
+  end
+
+
+  
   def translate_model_names(name)
     I18n.t("general.models.#{name}")
   end

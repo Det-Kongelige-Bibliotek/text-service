@@ -17,9 +17,8 @@
 %>
 
 <div class="relatedTextsToolbar
-  <% if (text_capabilities_type == "Hovedtekst")||(text_capabilities_type == "Tekst" ) %> hidden
+  <% if (text_capabilities_type == "Hovedtekst")||(text_capabilities_type == "Tekst" ) || (text_capabilities_type == "Værk" ) %> hidden
   <% end %>">
-
   <% if buttons_list.any? %>
     <%= render :partial => 'shared/components/organisms/filter-btn-group/index', locals: {list: buttons_list} %>
   <% end %>

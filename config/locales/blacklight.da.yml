@@ -147,7 +147,7 @@ da:
         title: 'Antalt resultater per side'
         submit: 'Update'
       sort:
-        label: 'Sorter efter %{field}'
+        label_html: 'Sorter efter %{field}'
         submit: 'Sortér resultater'
       form:
         search_field:
@@ -217,3 +217,15 @@ da:
       default: 'entry'
 
     did_you_mean: 'Mente du: %{options}?'
+
+    range_limit:
+      range_begin: "%{field_label} range begin"
+      range_end: "%{field_label} range end"
+      submit_limit: 'begræns'
+      remove_limit: 'fjern'
+      missing: 'Unknown'
+      view_distribution: 'histogram'
+      view_larger: 'Større »'
+      results_range_html: 'Resultater fra <span class="min">%{min}</span> til <span class="max">%{max}</span>'
+      single_html: '<span class="single" data-blrl-single="%{begin_value}">%{begin}</span>'
+      range_html: '<span class="from" data-blrl-begin="%{begin_value}">%{begin}</span> til <span class="to" data-blrl-end="%{end_value}">%{end}</span>'

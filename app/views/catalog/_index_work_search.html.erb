@@ -1,21 +1,22 @@
 <!-- Modal Alle forekomster  -->
 <% matches_id = "matches-ModalBody-#{document['id']}" %>
-<% text_label_id = "matces-text-label-#{document['id'].gsub("#", "")}" %>
+<% text_label_id = "matches-text-label-#{document['id'].gsub("#", "")}" %>
 <% modal_body_id = "matches-modal-body-#{document['id']}" %>
 <% modal_id = "matches-#{document['id']}" %>
 
 <% if search_field_fritekst? %>
-    <dt class="col-md-3" id=<%= text_label_id %>><%= t('general.search.list.in_text') %></dt>
-    <dd class="search-results col-md-9" id=<%= matches_id %>></dd>
+   <dt class="col-md-3" id=<%= text_label_id %>><%= t('general.search.list.in_text') %></dt>
+   <dd class="search-results col-md-9" id=<%= matches_id %>></dd>
 <% end %>
+
+<!-- DEBUG search_field  = <%= params[:search_field]  %> 
+           text_label_id = <%= text_label_id %> -->
 
 <div class="modal fade" id="<%= modal_id %>" tabindex="-1" role="dialog" aria-labelledby="textMatches">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="<%= text_label_id %>">
-          Alle forekomster
-        </h4>
+        <h4 class="modal-title" id="<%= text_label_id %>">Alle forekomster</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span></button>
       </div>
@@ -28,11 +29,34 @@
   </div>
 </div>
 
-<% if search_field_fritekst? %>
+<%
+
+   query = String.new
+
+   if params.dig(:q)
+      query =  params[:q]
+   end
+  
+   if params.dig(:f) && params[:f].dig("other_location_ssim") 
+      query = query + " " + params[:f]["other_location_ssim"].first
+   end
+
+   if params.dig(:f) && params[:f].dig("person_name_ssim") 
+      query = query + " " + params[:f]["person_name_ssim"].first
+   end
+
+   if params.dig(:f) && params[:f].dig("bible_ref_ssim") 
+      query = query + " " + URI.escape("\"") +  params[:f]["bible_ref_ssim"].first + URI.escape("\"")
+   end
+  
+  %>
+
+<% if !query.empty? %>
+<!-- % if search_field_fritekst? % -->
     <%= javascript_tag do %>
         $(document).ready(
         function () {
-        index_work_search("<%= document['id'] %>",$('#<%= modal_id %>'),$('#<%= modal_body_id %>'), $('#<%= matches_id %>'), $('#<%= text_label_id %>'), '<%= params[:q] %>', '<%= params[:match].present? ? params[:match] : "one" %>');
+        index_work_search("<%= document['id'] %>",$('#<%= modal_id %>'),$('#<%= modal_body_id %>'), $('#<%= matches_id %>'), $('#<%= text_label_id %>'), '<%= query %>', '<%= params[:match].present? ? params[:match] : "one" %>');
         });
     <% end %>
 <% end %>
